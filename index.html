@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/bootstrap.css">
+    <link rel="stylesheet" href="./css/mdb.css">
+    <link rel="stylesheet" href="./css/style1.css">
+</head>
+
+<body>
+    <div id="app">
+        <div class="container">
+            <br>
+            <!--Navigation-->
+            <nav id="top-navigation" class="navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar">
+                <a href="#" @click.prevent="isShowingCart = false">
+                    <strong>Ecommerce App </strong>Inc.</a>
+                <div class="text-right pull-right cart-info">
+                    <span class="stats">{{ cart.items.length }}
+                        <template v-if="cart.items.length == 1">item</template>
+                        <template v-else>items</template> in cart, totalling {{ cartTotal | currency }}</span>
+                    <button class="btn btn-md btn-primary" @click="isShowingCart = true">
+                        View Cart
+                    </button>
+                </div>
+            </nav>
+            <!--Navigation-->
+            <br>
+            <br>
+            <br>
+            <!--Section: Cards-->
+            <section v-if="!isShowingCart" class="text-center">
+                <!--Grid row-->
+                <div class="row mb-4 wow fadeIn">
+                    <!--Grid column-->
+                    <div class="col-lg-4 col-md-12 mb-4" v-for="product in products">
+                        <!--Card-->
+                        <div class="card">
+                            <!--Card image-->
+                            <div class="view overlay">
+                                <img src="http://placehold.it/400x250/000/fff" class="card-img-top" alt="">
+                            </div>
+                            <!--Card content-->
+                            <div class="card-body">
+                                <!--Title-->
+                                <h4 class="card-title">{{ product.name }}</h4>
+                                <!--Text-->
+                                <p class="card-text">{{ product.description }}</p>
+                                <p class="card-text">
+                                    <strong>{{ product.price | currency }}</strong>
+                                    <span class="badge badge-pill" :class="{ 'badge-primary': product.inStock >10 ,'badge-success': product.inStock > 30 , 'badge-warning': product.inStock >0 , 'badge-danger': product.inStock <= 0 }">
+                                        {{ product.inStock }}
+                                    </span>
+                                </p>
+                                <button class="btn btn-success" @click="addProductsToCart(product)" :disabled="product.inStock ==0">Add to cart</button>
+                            </div>
+                        </div>
+                        <!--/.Card-->
+                    </div>
+                    <!--Grid column-->
+                </div>
+                <!--Grid row-->
+            </section>
+
+            <section v-else class="text-center">
+                <!--Grid row-->
+                <h1>Cart</h1>
+                <div class="row mb-4 wow fadeIn">
+                    <!--Table of the Products goes here-->
+                    <table class="table table-striped" v-if="cart.items.length > 0">
+                        <thead class="table-dark">
+                            <tr>
+                                <td>Products</td>
+                                <td>Quantity</td>
+                                <td>Price</td>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr v-for="item in cart.items">
+                                <td>{{ item.product.name }}</td>
+                                <td>{{ item.quantity }} &nbsp;
+                                    <button class="btn btn-success btn-sm" @click="increaseQty(item)" :disabled="item.product.inStock == 0">+</button>
+                                    <button class="btn btn-danger btn-sm" @click="decreaseQty(item)">-</button>
+                                </td>
+                                <td>{{ item.quantity * item.product.price | currency }}</td>
+                            </tr>
+                            <tr>
+                                <td class="text-right" colspan="2">
+                                    <strong>Subtotal</strong>
+                                </td>
+                                <td>{{ cartTotal | currency }}</td>
+                            </tr>
+                            <tr>
+                                <td class="text-right" colspan="2">
+                                    <strong>Taxes</strong>
+                                </td>
+                                <td>{{ taxedAmt | currency }}</td>
+                            </tr>
+                            <tr>
+                                <td class="text-right" colspan="2">
+                                    <strong>Grand Total</strong>
+                                </td>
+                                <td>{{ taxedAmt + cartTotal | currency }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td>
+                                    <button class="btn btn-success" @click="checkOut()">Checkout</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!--Table of the Products goes here-->
+                    <p v-else>
+                        Your cart is currently empty.
+                    </p>
+                </div>
+                <!--Grid row-->
+            </section>
+            <!--Section: Cards-->
+        </div>
+    </div>
+</body>
+<script src="./js/jquery-3.3.1.min.js"></script>
+<script src="./js/popper.min.js"></script>
+<script src="./js/bootstrap.min.js"></script>
+<script src="./js/mdb.min.js"></script>
+<script src="./js/vue.js"></script>
+<script src="./main.js"></script>
+
+</html>
